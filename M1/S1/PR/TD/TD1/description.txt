@@ -1,0 +1,11 @@
+Nombre de processus : 10
+
+Arborescence :
+                             (1, FIN)
+                                |
+                             (2, FIN)
+                                |
+                  |---------------------------|
+               (3, FIN)                    (3, FIN)
+        |---------|---------|       |---------|---------|
+      (FIN)     (FIN)     (FIN)   (FIN)     (FIN)     (FIN)

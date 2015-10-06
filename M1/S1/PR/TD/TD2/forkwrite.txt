@@ -1,0 +1,15 @@
+Numérotons les appels à write :
+W1 : write(fd1, "abcde", strlen ("abcde"))
+W2 : write(fd1, "123", strlen("123"))
+W3 : write(fd2, "45", strlen("45"))
+W4 : write(fd3, "fg", strlen ("fg"))
+W5 : write(fd1, "hi", strlen ("hi"))
+
+Contenus possibles :
+1. fghie123      (W1, W2, W3, W4, W5)
+2. 45hi123       (W1, W4, W5, W2, W3)
+3. 45hie123      (W1, W2, W4, W3, W5)
+4. 45hi3         (W1, W4, W2, W3, W5)
+
+Il existe d'autres ordres d'exécution mais le résultat sera
+le même qu'un des contenus ci-dessus.
