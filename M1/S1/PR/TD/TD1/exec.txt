@@ -1,0 +1,32 @@
+1. Avec la fonction C sleep
+Nombre de processus créés : 4.
+
+Arborescence : 
+		   
+		   (2 fils)
+			  |
+       |--------------|
+    (1 fils)      (sans fils)
+       |
+   (sans fils)
+   
+   
+   
+2. Avec la fonction execl qui appelle la commande sleep
+Nombre de processus créés : 4.
+
+Arborescence :
+
+		   (2 fils)
+		      |
+       |--------------|
+    (1 fils)         (0)     , avec 0 = aucun affichage
+       |
+      (0)
+
+  
+
+3. Avec la fonction execv qui appelle la commande sleep
+Mêmes réponses que la question 2. car execv a le même comportement
+que la fonction execl. Ce qui change c'est la façon dont les arguments
+sont envoyés.
