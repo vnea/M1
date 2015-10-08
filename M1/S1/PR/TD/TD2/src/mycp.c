@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     }
     
     // On vérifie que c'est bien un fichier régulier
-    if (sb.st_mode & S_IFMT != S_IFREG) {
+    if (!S_ISREG(sb.st_mode)) {
         perror("Le 1er fichier n'est pas un fichier régulier.\n");
         return EXIT_FAILURE;
     }
@@ -43,8 +43,8 @@ int main(int argc, char **argv) {
     // On récupère le contenu du fichier 1 dans un buffer
     char buf[BUFSIZ];
     int n;
-    if ((n = read(fd1, buf, BUFSIZ)) <= 0) {
-        perror("Fin du 1er fichier.\n");
+    if ((n = read(fd1, buf, BUFSIZ)) == -1) {
+        perror("Erreur read.\n");
         return EXIT_FAILURE;
     }
     close(fd1);

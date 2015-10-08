@@ -61,7 +61,7 @@ void lire_fgetc(FILE *const f) {
 
 void lecture_libc(char const * const nom_fichier) {
     FILE *f;
-    if ((f = fopen (nom_fichier, "r")) == NULL) {
+    if ((f = fopen(nom_fichier, "r")) == NULL) {
         perror("Erreur de l'ouverture du fichier (fopen).\n");
         exit(EXIT_FAILURE);
     }
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     }
     
     // On vérifie que c'est bien un fichier régulier
-    if (sb.st_mode & S_IFMT != S_IFREG) {
+    if (!S_ISREG(sb.st_mode)) {
         perror("Le fichier n'est pas un fichier régulier.\n");
         return EXIT_FAILURE;
     }
