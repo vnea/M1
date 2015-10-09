@@ -15,7 +15,7 @@ void *func_thread() {
     
     /* Sécuriser accès à la variable somme */
     pthread_mutex_lock(&mutex);
-    somme += nb_alea;
+        somme += nb_alea;
     pthread_mutex_unlock(&mutex);
     
     pthread_exit((void *) (2 * pthread_self()));

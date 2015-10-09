@@ -20,16 +20,16 @@ void *func_thread() {
     
     /* Sécuriser accès à la variable somme */
     pthread_mutex_lock(&mutex);
-    somme += nb_alea;
-    ++nb_thread_execute;
+        somme += nb_alea;
+        ++nb_thread_execute;
+        
+        /* Dernière thread = on envoie le signal */
+        if (nb_thread_execute == NB_THREADS) {
+            pthread_mutex_lock(&mutex_fin);
+            pthread_cond_signal(&cond_fin);
+            pthread_mutex_unlock(&mutex_fin);
+        }
     pthread_mutex_unlock(&mutex);
-    
-    /* Dernière thread = on envoie le signal */
-    if (nb_thread_execute == NB_THREADS) {
-        pthread_mutex_lock(&mutex_fin);
-        pthread_cond_signal(&cond_fin);
-        pthread_mutex_unlock(&mutex_fin);
-    }
     
     pthread_exit((void *) (2 * pthread_self()));
 
@@ -39,7 +39,7 @@ void *func_thread() {
 void *func_thread_fin() {
     /* On attend le signal de la dernière thread */
     pthread_mutex_lock(&mutex_fin);
-    pthread_cond_wait(&cond_fin, &mutex_fin);
+        pthread_cond_wait(&cond_fin, &mutex_fin);
     pthread_mutex_unlock(&mutex_fin);
     
     printf("Thread final, somme = %d.\n", somme);
