@@ -20,7 +20,7 @@ O=obj/upper.o
 
 
 .PHONY: all clean test
-tall: $(BIN)thread_upper $(BIN)thread_uppermax $(BIN)producteur_consommateur $(BIN)producteurs_consommateurs
+all: $(BIN)thread_upper $(BIN)thread_uppermax $(BIN)producteur_consommateur $(BIN)producteurs_consommateurs
 test: test-thread_upper test-thread_uppermax test-producteur_consommateur test-producteurs_consommateurs
 
 test-thread_upper: $(BIN)thread_upper
