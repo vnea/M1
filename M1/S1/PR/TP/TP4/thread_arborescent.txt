@@ -1,0 +1,13 @@
+1) Il y a 9 threads créés (sans compter la thread principale main).
+
+2) Pour arg = 1 et max = 3, on a l'arbre suivant :
+
+          main
+            |
+           t1
+     |--------------|
+     t2             t3
+ |---|---|      |---|---|
+ t4  t5  t6     t7  t8  t9
+ 
+ 3) Formule :

@@ -19,7 +19,7 @@ int stack_size = 0;
 void push(int c) {
     pthread_mutex_lock(&mutex);
         /* Pile pleine */
-        if (stack_size == TAILLE_PILE - 1) {
+        while (stack_size == TAILLE_PILE - 1) {
              pthread_cond_wait(&cond_pile_pleine, &mutex);
         }
         
@@ -27,7 +27,7 @@ void push(int c) {
         
         /* On envoie un signal au consommateur */
         if (stack_size == 0) {
-            pthread_cond_signal(&cond_pile_vide);
+            pthread_cond_broadcast(&cond_pile_vide);
         }
         
         ++stack_size;
@@ -38,7 +38,7 @@ char pop() {
     char c;
     pthread_mutex_lock(&mutex);
         /* Pile vide */
-        if (stack_size == 0) {
+        while (stack_size == 0) {
              pthread_cond_wait(&cond_pile_vide, &mutex);
         }
         
@@ -46,7 +46,7 @@ char pop() {
         
         /* On envoie un signal au producteur */
         if (stack_size == TAILLE_PILE - 1) {
-            pthread_cond_signal(&cond_pile_pleine);
+            pthread_cond_broadcast(&cond_pile_pleine);
         }
     pthread_mutex_unlock(&mutex);
     
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
     for (i = 0; i < nb_prods; ++i) {
         if (pthread_create(&prods[i], NULL, prod_thread, NULL) != 0) {
             perror("Erreur pthread_create.\n");
-            /* free */
+            free(prods);
             return EXIT_FAILURE;
         }
     }
@@ -104,43 +104,37 @@ int main(int argc, char **argv) {
     /* Création des consommateurs */
     consos = malloc(sizeof(pthread_t) * nb_consos);
     for (i = 0; i < nb_consos; ++i) {
-        if (pthread_create(&consos[i], NULL, prod_thread, NULL) != 0) {
+        if (pthread_create(&consos[i], NULL, cons_thread, NULL) != 0) {
             perror("Erreur pthread_create.\n");
-            /* free */
+            free(prods);
+            free(consos);
             return EXIT_FAILURE;
         }
     }
-    
-    
-    /* Création prod */
-    /*
-    if (pthread_create(&prod, NULL, prod_thread, NULL) != 0) {
-            perror("Erreur pthread_create.\n");
-            return EXIT_FAILURE;
-    }
-    */
-    /* Création conso */
-    /*
-    if (pthread_create(&conso, NULL, cons_thread, NULL) != 0) {
-        perror("Erreur pthread_create.\n");
-        return EXIT_FAILURE;
-    }
-    */
-    
-    /* Attente thread prod */
-   /* if (pthread_join(prod, NULL) != 0) {
-        perror("Erreur pthread_join.\n");
-        return EXIT_FAILURE;
-    }
-*/
-    /* Attente thread conso */
-    /*
-    if (pthread_join(conso, NULL) != 0) {
-        perror("Erreur pthread_join.\n");
-        return EXIT_FAILURE;
-    }
-    */
 
+    /* Attente des producteurs */
+    for (i = 0; i < nb_prods; ++i) {
+        if (pthread_join(prods[i], NULL) != 0) {
+            perror("Erreur pthread_join.\n");
+            free(prods);
+            free(consos);
+            return EXIT_FAILURE;
+        }
+    } 
+    
+    /* Attente des consommateurs */
+    for (i = 0; i < nb_consos; ++i) {
+        if (pthread_join(consos[i], NULL) != 0) {
+            perror("Erreur pthread_join.\n");
+            free(prods);
+            free(consos);
+            return EXIT_FAILURE;
+        }
+    }
+
+    free(prods);
+    free(consos);
+    
     return EXIT_SUCCESS;
 }
 
