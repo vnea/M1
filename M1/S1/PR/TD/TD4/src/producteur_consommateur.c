@@ -8,63 +8,45 @@
 #include "../include/producteur_consommateur.h"
 
 #define TAILLE_PILE 100
-#define NB_THREADS 2
 
-pthread_mutex_t mutex_prod = PTHREAD_MUTEX_INITIALIZER, 
-                mutex_cons = PTHREAD_MUTEX_INITIALIZER,
-                mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond_prod = PTHREAD_COND_INITIALIZER,
-               cond_cons = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond_pile_pleine = PTHREAD_COND_INITIALIZER,
+               cond_pile_vide = PTHREAD_COND_INITIALIZER;
+
 char pile[TAILLE_PILE];
 int stack_size = 0;
 
 void push(int c) {
     pthread_mutex_lock(&mutex);
-        if (stack_size < TAILLE_PILE) {
-
-            pile[stack_size++] = c;
-
-            pthread_mutex_lock(&mutex_prod);
-                pthread_mutex_unlock(&mutex);
-                pthread_cond_signal(&cond_prod);
-            pthread_mutex_unlock(&mutex_prod);
-            
-            pthread_mutex_lock(&mutex_cons);
-                pthread_cond_wait(&cond_cons, &mutex_cons);
-            pthread_mutex_unlock(&mutex_cons);
+        /* Pile pleine */
+        if (stack_size == TAILLE_PILE - 1) {
+             pthread_cond_wait(&cond_pile_pleine, &mutex);
         }
+        
+        pile[stack_size] = c;
+        
+        /* On envoie un signal au consommateur */
+        if (stack_size == 0) {
+            pthread_cond_signal(&cond_pile_vide);
+        }
+        
+        ++stack_size;
     pthread_mutex_unlock(&mutex);
-
-/*
-    pthread_mutex_lock(&mutex_pile_pleine);
-        pthread_mutex_lock(&mutex);
-            while (stack_size < TAILLE_PILE) {
-                pile[stack_size++] = c;
-                pthread_mutex_unlock(&mutex);
-                pthread_cond_wait(&cond_pile_pleine, &mutex_pile_pleine);
-                pthread_mutex_lock(&mutex);
-            }
-        pthread_mutex_unlock(&mutex);
-    pthread_mutex_unlock(&mutex_pile_pleine);
-    */
 }
 
 char pop() {
     char c;
     pthread_mutex_lock(&mutex);
-        if (stack_size > 0) {
-            printf("pop\n");
-            c = pile[stack_size - 1];
-            --stack_size;
-            
-            pthread_mutex_lock(&mutex_prod);
-                pthread_cond_wait(&cond_prod, &mutex_prod);
-            pthread_mutex_unlock(&mutex_prod);
-            
-            pthread_mutex_lock(&mutex_cons);
-                pthread_mutex_unlock(&mutex);
-                pthread_cond_signal(&cond_cons);
-            pthread_mutex_unlock(&mutex_cons);
+        /* Pile vide */
+        if (stack_size == 0) {
+             pthread_cond_wait(&cond_pile_vide, &mutex);
+        }
+        
+        c = pile[--stack_size];
+        
+        /* On envoie un signal au producteur */
+        if (stack_size == TAILLE_PILE - 1) {
+            pthread_cond_signal(&cond_pile_pleine);
         }
     pthread_mutex_unlock(&mutex);
     
@@ -73,20 +55,20 @@ char pop() {
 
 void *prod_thread() {
     PRODUCTEUR
+    pthread_exit((void *) 0); 
+    
     return NULL;
 }
 
 void *cons_thread() {
     CONSOMMATEUR
+    pthread_exit((void *) 0); 
+    
     return NULL;
 }
 
 int main() {
-   /* char buf_pipe[TAILLE_PILE];*/
     pthread_t prod, conso;
-    
-    /* On récupère l'affichage de echo */
-  /*  scanf("%s", buf_pipe);*/
     
     /* Création prod */
     if (pthread_create(&prod, NULL, prod_thread, NULL) != 0) {
@@ -100,12 +82,13 @@ int main() {
         return EXIT_FAILURE;
     }
     
+    /* Attente thread prod */
     if (pthread_join(prod, NULL) != 0) {
         perror("Erreur pthread_join.\n");
         return EXIT_FAILURE;
     }
 
-    /* Attente threads */
+    /* Attente thread conso */
     if (pthread_join(conso, NULL) != 0) {
         perror("Erreur pthread_join.\n");
         return EXIT_FAILURE;
