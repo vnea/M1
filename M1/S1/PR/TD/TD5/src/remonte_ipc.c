@@ -11,16 +11,15 @@
 
 #define MSG_SIZE 128
 
-
+struct message {
+    long type;
+    int nb_alea;
+};
 
 void remonte_ipc(int nb_fils, int msg_id) {
     pid_t pid;
-    int i;
-    
-    struct message {
-        long type;
-        int nb_alea;
-    } msg;
+    int i, somme, status;
+    struct message msg;
     
     /* Création des N fils */
     for (i = 0; i < nb_fils; ++i) {
@@ -32,18 +31,40 @@ void remonte_ipc(int nb_fils, int msg_id) {
         
         /* Fils */
         if (pid == 0) {
-             srand(time(NULL));
-             msg.type = 1;
-             msg.nb_alea = (int) (10 * (float) rand() / RAND_MAX);
-             msgsnd(msg_id, &msg, MSG_SIZE, 0);
-             
-             exit(EXIT_SUCCESS);
+            srand(getpid());
+            msg.type = 1L;
+            msg.nb_alea = (int) (10 * (float) rand() / RAND_MAX);
+            printf("Fils %d génère nb_alea = %d.\n", getpid(), msg.nb_alea);
+            msgsnd(msg_id, &msg, MSG_SIZE, 0);
+
+            exit(EXIT_SUCCESS);
         }
     }
 
     /* Attente des fils */
-    /* while (wait(NULL) != -1) {
-    }*/
+    while (wait(&status) != -1) {
+        /* Erreur terminaison */
+        if (!WIFEXITED(status)) {
+            perror("Erreur terminaison.\n");
+            
+            /* On libère la file */
+            if (msgctl(msg_id, IPC_RMID, NULL) == -1) {
+                perror("Erreur msgctl.\n");
+                exit(EXIT_FAILURE);
+            }
+            
+            exit(EXIT_FAILURE);
+        }
+    }
+    
+    /* On calcule et on affiche la somme */
+    somme = 0;
+    for (i = 0; i < nb_fils; ++i) {
+        msgrcv(msg_id, &msg, MSG_SIZE, 1L, 0);
+        somme += msg.nb_alea;
+    }
+    
+    printf("\nSomme = %d.\n", somme);
 }
 
 int main(int argc, char **argv) {
@@ -56,7 +77,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    /* Nombre de files invalide */
+    /* Nombre de fils invalide */
     nb_fils = atoi(argv[1]);
     if (!nb_fils) {
         printf("nb_fils doit être un nombre strictement positif.\n");
@@ -76,6 +97,12 @@ int main(int argc, char **argv) {
     }
     
     remonte_ipc(nb_fils, msg_id);
+   
+    /* On libère la file */
+    if (msgctl(msg_id, IPC_RMID, NULL) == -1) {
+        perror("Erreur msgctl.\n");
+        return EXIT_FAILURE;
+    }
    
     return EXIT_SUCCESS;
 }
