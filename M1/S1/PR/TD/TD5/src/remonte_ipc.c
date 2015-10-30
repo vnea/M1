@@ -9,8 +9,6 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
-#define MSG_SIZE 128
-
 struct message {
     long type;
     int nb_alea;
@@ -35,7 +33,12 @@ void remonte_ipc(int nb_fils, int msg_id) {
             msg.type = 1L;
             msg.nb_alea = (int) (10 * (float) rand() / RAND_MAX);
             printf("Fils %d génère nb_alea = %d.\n", getpid(), msg.nb_alea);
-            msgsnd(msg_id, &msg, MSG_SIZE, 0);
+            
+            /* On envoie le message au père */
+            if (msgsnd(msg_id, &msg, sizeof(int), 0) == -1) {
+                perror("Erreur msgsng.\n");
+                exit(EXIT_FAILURE);
+            }
 
             exit(EXIT_SUCCESS);
         }
@@ -58,9 +61,19 @@ void remonte_ipc(int nb_fils, int msg_id) {
     }
     
     /* On calcule et on affiche la somme */
-    somme = 0;
-    for (i = 0; i < nb_fils; ++i) {
-        msgrcv(msg_id, &msg, MSG_SIZE, 1L, 0);
+    for (i = somme = 0; i < nb_fils; ++i) {
+        /* On attend le message du fils */
+        if (msgrcv(msg_id, &msg, sizeof(int), 1L, 0) == -1) {
+            perror("Erreur msgrcv.\n");
+        
+            /* On libère la file */
+            if (msgctl(msg_id, IPC_RMID, NULL) == -1) {
+                perror("Erreur msgctl.\n");
+            }
+            
+            exit(EXIT_FAILURE);
+        }
+        
         somme += msg.nb_alea;
     }
     
