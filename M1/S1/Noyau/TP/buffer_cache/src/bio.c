@@ -99,10 +99,28 @@ int incore(int dev, bc_daddr_t blkno) {
  * @param bp : pointeur vers un buffer
  */
 void brelse(struct buf *bp) {
-  struct buf **backp;
-  int flags; int s;
+    struct buf **backp;
+    int flags; int s;
+    
+    if (bp->b_flags & B_WANTED) {
+        twakeup((caddr_t) bp);
+    }
 
-  
+    if (bfreelist.b_flags & B_WANTED) {
+        twakeup(&bfreelist);
+        bfreelist.b_flags &= ~B_WANTED;
+    }
+    
+    s = splbio();
+    spl(BDINHB);
+    backp = &bfreelist.av_forw;
+    (*backp)->av_forw = bp;
+    bp->av_back = *backp;
+    *backp = bp;
+    bp->av_forw = &bfreelist;
+    bp->b_flags &=~ (B_WANTED | B_BUSY | B_ASYNC);
+    bfreelist.b_count++;
+    spl(s);
 }
 
 /**
