@@ -1,0 +1,4 @@
+for f in u*-1.xml ; do
+    grep -Pc '<(integer|float|string|boolean)' < $f > ${f%.xml}.count
+    echo $f `cat ${f%.xml}.count `
+done

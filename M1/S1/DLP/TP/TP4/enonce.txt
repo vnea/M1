@@ -1,0 +1,2 @@
+1 fichier XML -(1)-> DOM -(2)-> AST -(3)-> AST -(4)-> Compi/Int
+                          (a)        (b)        (c)
