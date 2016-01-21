@@ -1,0 +1,91 @@
+Node {
+    attribtuts {
+        name : String // Id
+        label : String
+        shape : enum
+        color : enum
+        neighbours : Node[]
+    }
+    
+    operations {
+    }
+}
+
+Edge {
+    attributs {
+        source : Node
+        dest : Node
+        color : enum
+    }
+    
+    operations {
+        Edge(Node a, Node b) {
+            source = a;
+            dest = b;
+            a.addNeighbour(b);
+            b.addNeighbour(a);
+        }
+    }
+}
+
+GraphModel {
+    attributs {
+        nodes : Node[]
+        edges : Edge[]
+        subgraph : Node[][]
+        directed : boolean
+        view : GraphView
+    }
+
+    operations {
+        addNode(node : Node)
+        deleteNode(node : Node)
+        addEdge(edge : Edge)
+        deleteNode(node : Node)
+        setLabelNode(Node n, String label) {
+            n.setLabel(label);
+            view.update();
+        }
+    }
+}
+
+GraphControllerGraphic {
+    attributs {
+        graphModel : Graph
+    }
+}
+
+GraphControllerText {
+    attributs {
+        graphModel : Graph
+    }
+}
+
+GraphViewGraphic(QTView) {
+    
+}
+
+GraphViewText(QTView) {
+}
+
+MainView(QWindow) {  //tt les controles
+    attributs {
+        menu : QMenu
+        // ensembles des vues
+    }
+}
+
+
+class Observer abs
+TestView extends Observer
+ArrayList<Observer> obs = new Arrayl...
+a[0] = new TestView();
+
+
+
+
+
+
+
+
+
