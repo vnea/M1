@@ -1,0 +1,462 @@
+Terminaux inutilisés dans la grammaire
+
+   eol
+
+
+Grammaire
+
+    0 $accept: Prog $end
+
+    1 Prog: Expr ';'
+
+    2 Expr: true
+    3     | false
+    4     | num
+    5     | not Expr
+    6     | and Expr Expr
+    7     | or Expr Expr
+    8     | eq Expr Expr
+    9     | lt Expr Expr
+   10     | add Expr Expr
+   11     | sub Expr Expr
+   12     | mul Expr Expr
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+$end (0) 0
+';' (59) 1
+error (256)
+true (258) 2
+false (259) 3
+num (260) 4
+not (261) 5
+and (262) 6
+or (263) 7
+eq (264) 8
+lt (265) 9
+add (266) 10
+sub (267) 11
+mul (268) 12
+eol (269)
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+$accept (16)
+    à gauche: 0
+Prog (17)
+    à gauche: 1, à droite: 0
+Expr (18)
+    à gauche: 2 3 4 5 6 7 8 9 10 11 12, à droite: 1 5 6 7 8 9 10
+    11 12
+
+
+État 0
+
+    0 $accept: . Prog $end
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Prog  aller à l'état 12
+    Expr  aller à l'état 13
+
+
+État 1
+
+    2 Expr: true .
+
+    $défaut  réduction par utilisation de la règle 2 (Expr)
+
+
+État 2
+
+    3 Expr: false .
+
+    $défaut  réduction par utilisation de la règle 3 (Expr)
+
+
+État 3
+
+    4 Expr: num .
+
+    $défaut  réduction par utilisation de la règle 4 (Expr)
+
+
+État 4
+
+    5 Expr: not . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 14
+
+
+État 5
+
+    6 Expr: and . Expr Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 15
+
+
+État 6
+
+    7 Expr: or . Expr Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 16
+
+
+État 7
+
+    8 Expr: eq . Expr Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 17
+
+
+État 8
+
+    9 Expr: lt . Expr Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 18
+
+
+État 9
+
+   10 Expr: add . Expr Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 19
+
+
+État 10
+
+   11 Expr: sub . Expr Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 20
+
+
+État 11
+
+   12 Expr: mul . Expr Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 21
+
+
+État 12
+
+    0 $accept: Prog . $end
+
+    $end  décalage et aller à l'état 22
+
+
+État 13
+
+    1 Prog: Expr . ';'
+
+    ';'  décalage et aller à l'état 23
+
+
+État 14
+
+    5 Expr: not Expr .
+
+    $défaut  réduction par utilisation de la règle 5 (Expr)
+
+
+État 15
+
+    6 Expr: and Expr . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 24
+
+
+État 16
+
+    7 Expr: or Expr . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 25
+
+
+État 17
+
+    8 Expr: eq Expr . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 26
+
+
+État 18
+
+    9 Expr: lt Expr . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 27
+
+
+État 19
+
+   10 Expr: add Expr . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 28
+
+
+État 20
+
+   11 Expr: sub Expr . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 29
+
+
+État 21
+
+   12 Expr: mul Expr . Expr
+
+    true   décalage et aller à l'état 1
+    false  décalage et aller à l'état 2
+    num    décalage et aller à l'état 3
+    not    décalage et aller à l'état 4
+    and    décalage et aller à l'état 5
+    or     décalage et aller à l'état 6
+    eq     décalage et aller à l'état 7
+    lt     décalage et aller à l'état 8
+    add    décalage et aller à l'état 9
+    sub    décalage et aller à l'état 10
+    mul    décalage et aller à l'état 11
+
+    Expr  aller à l'état 30
+
+
+État 22
+
+    0 $accept: Prog $end .
+
+    $défaut  accepter
+
+
+État 23
+
+    1 Prog: Expr ';' .
+
+    $défaut  réduction par utilisation de la règle 1 (Prog)
+
+
+État 24
+
+    6 Expr: and Expr Expr .
+
+    $défaut  réduction par utilisation de la règle 6 (Expr)
+
+
+État 25
+
+    7 Expr: or Expr Expr .
+
+    $défaut  réduction par utilisation de la règle 7 (Expr)
+
+
+État 26
+
+    8 Expr: eq Expr Expr .
+
+    $défaut  réduction par utilisation de la règle 8 (Expr)
+
+
+État 27
+
+    9 Expr: lt Expr Expr .
+
+    $défaut  réduction par utilisation de la règle 9 (Expr)
+
+
+État 28
+
+   10 Expr: add Expr Expr .
+
+    $défaut  réduction par utilisation de la règle 10 (Expr)
+
+
+État 29
+
+   11 Expr: sub Expr Expr .
+
+    $défaut  réduction par utilisation de la règle 11 (Expr)
+
+
+État 30
+
+   12 Expr: mul Expr Expr .
+
+    $défaut  réduction par utilisation de la règle 12 (Expr)
