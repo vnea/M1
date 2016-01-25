@@ -1,0 +1,2 @@
+gcc prodconsft.c -L ../../../lib_fthread/ -lfthread -lpthread
+
