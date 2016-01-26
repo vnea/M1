@@ -45,16 +45,78 @@ public class DefaultTeam {
 		return new Line(p,q);
 	}
 	
+	// Exercice 8.2
+	private ArrayList<Point> filtrageAklToussaint(ArrayList<Point> points) {
+		// On crée le quadrilatère
+		Point A, B, C, D;
+		A = B = C = D = points.get(0);
+		for (Point p : points) {
+			// A : abscisse min
+			if (p.getX() < A.getX()) {
+				A = p;
+			}
+			
+			// B : ordonnée min
+			if (p.getY() < B.getY()) {
+				B = p;
+			}
+			
+			// C : abscisse max
+			if (p.getX() > C.getX()) {
+				C = p;
+			}
+			
+			// D : ordonnée max
+			if (p.getY() > D.getY()) {
+				D = p;
+			}
+		}
+		
+		// On retire les points inutiles
+		ArrayList<Point> filteredPoints = new ArrayList<Point>();
+		for (Point X : points) {
+			if (!pointIsInRect(A, B, C, D, X)) {
+				filteredPoints.add(X);
+			}
+		}
+		
+		return filteredPoints;
+	}
+	
+	// u = p1-p2 et v = p3-p4
+	private double vectorProductZ(Point p1, Point p2, Point p3, Point p4) {
+		final double ux = p2.getX() - p1.getX();
+		final double uy = p2.getY() - p1.getY();
+		final double vx = p4.getX() - p3.getX();
+		final double vy = p4.getY() - p3.getY();
+
+		return ux * vy - uy * vx;
+	}
+	
+	private boolean pointIsInRect(Point A, Point B, Point C, Point D, Point X) {
+		return (
+			   // On teste X dans ABC
+			   (vectorProductZ(A, B, A, X) * vectorProductZ(A, B, A, C) >= 0.0 &&
+			   vectorProductZ(B, C, B, X) * vectorProductZ(B, C, B, A) >= 0.0 &&
+			   vectorProductZ(A, C, A, X) * vectorProductZ(A, C, A, B) >= 0.0) ||
+			   // On test X dans ACD
+			   
+			   (vectorProductZ(A, D, A, X) * vectorProductZ(A, D, A, C) >= 0.0 &&
+			   vectorProductZ(D, C, D, X) * vectorProductZ(D, C, D, A) >= 0.0 &&
+			   vectorProductZ(A, C, A, X) * vectorProductZ(A, C, A, D) >= 0.0));
+	}
+	
 	// calculCercleMin: ArrayList<Point> --> Circle
 	//   renvoie un cercle couvrant tout point de la liste, de rayon minimum.
 	// Exercice 4
-	
+	/*
 	public Circle calculCercleMin(ArrayList<Point> points) {
 		if (points.isEmpty()) {
 			return null;
 		}
+		points = filtrageAklToussaint(points);
 
-		// Cas g�n�ral
+		// Cas g�n�ral
 		for (Point p : points) {
 			for (Point q : points) {
 				double cx = (p.getX() + q.getX()) * 0.5;
@@ -68,37 +130,39 @@ public class DefaultTeam {
 		}
 
 		// Cas du triangle
-		/*
-		for (Point p : points) {
-			for (Point q : points) {
-				for (Point r : points) {
-					Circle c = cercleCirconsrit(p, q, r);
-					if (containsAll(points, c)) {
-						return c;
-					}
-				}
-			}
-		}
-	    */
 		
+//		for (Point p : points) {
+//			for (Point q : points) {
+//				for (Point r : points) {
+//					Circle c = cercleCirconsrit(p, q, r);
+//					if (containsAll(points, c)) {
+//						return c;
+//					}
+//				}
+//			}
+//		}
+	    
 		Point center = points.get(0);
 		int radius = 100;
 		System.out.println("Minimum Circle not found");
 		return new Circle(center, radius);
 	}
-	
+	*/
 	
 	// calculCercleMin: ArrayList<Point> --> Circle
 	//   renvoie un cercle couvrant tout point de la liste, de rayon minimum.
 	// Exercice 5
-	/*
+	
 	public Circle calculCercleMin(ArrayList<Point> points) {
 		if (points.isEmpty()) {
 			return null;
 		}
-		
 	    System.out.println("DEBUT calculCercleMin");
-		
+	    System.out.println(points.size());
+
+		points = filtrageAklToussaint(points);
+	    System.out.println(points.size());
+
 		// Etape 0
 		ArrayList<Point> copyPoints = new ArrayList<>(points);
 		
@@ -148,7 +212,7 @@ public class DefaultTeam {
 	    System.out.println("FIN calculCercleMin");
 	    return CERCLE;
 	}
-	*/
+	
 	
 	private Point findFarthestPoint(ArrayList<Point> points, Point p) {
 	    Point farthestPoint = null;
