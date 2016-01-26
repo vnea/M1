@@ -48,27 +48,27 @@ public class DefaultTeam {
 	// calculCercleMin: ArrayList<Point> --> Circle
 	//   renvoie un cercle couvrant tout point de la liste, de rayon minimum.
 	// Exercice 4
-	/*
+	
 	public Circle calculCercleMin(ArrayList<Point> points) {
 		if (points.isEmpty()) {
 			return null;
 		}
 
-
-		// Cas gÃ©nÃ©ral
+		// Cas général
 		for (Point p : points) {
 			for (Point q : points) {
 				double cx = (p.getX() + q.getX()) * 0.5;
 				double cy = (p.getY() + q.getY()) * 0.5;
-				double radius = (Math.sqrt(Math.pow(p.getX() - q.getX(), 2.0) + Math.pow(p.getY() - q.getY(), 2.0))) * 0.5;
+				double radius = p.distance(q) * 0.5;
 				Circle c = new Circle(new Point((int) cx, (int) cy), (int) radius);
-				if (containsAll(points, c)) {
+				if (circleContainsAllPoints(points, c)) {
 					return c;
 				}
 			}
 		}
 
 		// Cas du triangle
+		/*
 		for (Point p : points) {
 			for (Point q : points) {
 				for (Point r : points) {
@@ -79,21 +79,25 @@ public class DefaultTeam {
 				}
 			}
 		}
-	    
+	    */
+		
 		Point center = points.get(0);
 		int radius = 100;
-
+		System.out.println("Minimum Circle not found");
 		return new Circle(center, radius);
 	}
-	*/
+	
 	
 	// calculCercleMin: ArrayList<Point> --> Circle
 	//   renvoie un cercle couvrant tout point de la liste, de rayon minimum.
 	// Exercice 5
+	/*
 	public Circle calculCercleMin(ArrayList<Point> points) {
 		if (points.isEmpty()) {
 			return null;
 		}
+		
+	    System.out.println("DEBUT calculCercleMin");
 		
 		// Etape 0
 		ArrayList<Point> copyPoints = new ArrayList<>(points);
@@ -144,6 +148,7 @@ public class DefaultTeam {
 	    System.out.println("FIN calculCercleMin");
 	    return CERCLE;
 	}
+	*/
 	
 	private Point findFarthestPoint(ArrayList<Point> points, Point p) {
 	    Point farthestPoint = null;
@@ -160,15 +165,12 @@ public class DefaultTeam {
 	}
 	
 	private boolean circleContainsPoint(Circle c, Point p) {
-		return p.distance(c.getCenter()) <= c.getRadius();
+		return p.distance(c.getCenter()) <= c.getRadius() + 20;
 	}
 	
-	private boolean containsAll(ArrayList<Point> points, Circle c) {
-		final double radiusCircleSquare = Math.pow(c.getRadius(), 2.0);
+	private boolean circleContainsAllPoints(ArrayList<Point> points, Circle c) {
 		for (Point p : points) {
-			double dx = p.getX() - c.getCenter().getX();
-			double dy = p.getY() - c.getCenter().getY();
-			if (Math.pow(dx, 2.0) + Math.pow(dy, 2.0) > radiusCircleSquare) {
+			if (!circleContainsPoint(c, p)) {
 				return false;
 			}
 		}
