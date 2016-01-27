@@ -2,7 +2,6 @@ package algorithms;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Random;
 
 import supportGUI.Circle;
 import supportGUI.Line;
@@ -62,11 +61,14 @@ public class DefaultTeam {
     }
 
     // Application du filtre par pixel
-    System.out.println(points.size());
-    points = triParPixel(points);
-    System.out.println(points.size());
+    //System.out.println(points.size());
+    //points = triParPixel(points);
+    //System.out.println(points.size());
 
+    
     ArrayList<Point> enveloppe = new ArrayList<Point>();
+    enveloppe = jarvis(points);
+    /*
     boolean sur_enveloppe = true;
     int i;
     double produit_vec, prod_vec_tmp;
@@ -108,9 +110,9 @@ public class DefaultTeam {
         		i++;
         	}
         	// On les ajoutent à l'enveloppe s'ils n'en font pas déjà parti
-        	/* On ne retire pas les doublons finalement 
-        	 * car sinon les cotés ne seront pas tracés 
-        	 * comme on veux (là ils sont tous reliés entre eux du coup)*/
+        	// On ne retire pas les doublons finalement 
+        	// car sinon les cotés ne seront pas tracés 
+        	// comme on veux (là ils sont tous reliés entre eux du coup)
         	if(sur_enveloppe){
         		//if(!enveloppe.contains(a))
         			enveloppe.add(a);
@@ -119,7 +121,7 @@ public class DefaultTeam {
         	}
         }
     }
-  
+  */
     return enveloppe;
   }
   
@@ -131,13 +133,14 @@ public class DefaultTeam {
 
 		return ux * vy - uy * vx;
 	}
-
+  
+  // Exo 2
   private ArrayList<Point> triParPixel(ArrayList<Point> points) {
 	  ArrayList<Point> ymin = new ArrayList<>(points.size());
 	  ArrayList<Point> ymax = new ArrayList<>(points.size());
 
 	  // On remplit ymin et yman à null
-	  for (Point p : points)  {
+	  for (int i = 0; i < points.size(); ++i)  {
 		  ymin.add(null);
 		  ymax.add(null);
 	  }
@@ -177,4 +180,45 @@ public class DefaultTeam {
 	  
 	  return result;
   }
+  
+  private ArrayList<Point> jarvis(ArrayList<Point> points) {
+	  // Etape 1 : on cherche un premier point P de l'enveloppe convexe : abscisse minimum
+	  Point P = points.get(0);
+	  int index = 0;
+	  for (int i = 1; i < points.size(); ++i) {
+		  if (points.get(i).getX() < P.getX()) {
+			  P = points.get(i);
+			  index = i;
+		  }
+	  }
+	  
+	  ArrayList<Point> result = new ArrayList<Point>();
+	  result.add(P);
+	  
+
+	  // Etape 2 : on cherche un point Q tel que PQ est un côté de l'enveloppe convexe
+	  Point Q;
+	  do {
+		  Q = points.get(++index % points.size());
+	  } while (!isEdgeConvexHull(points, P, Q));
+	  result.add(Q);
+
+	  // Etape 4
+
+
+	  
+	  return result;
+  }
+  
+  private boolean isEdgeConvexHull(ArrayList<Point> points, Point p, Point q) {
+	  for (Point r : points) {
+		  if (vectorProductZ(p, r, p, q) < 0.0) {
+			  return false;
+		  }
+	  }
+	  
+	  return true;
+  }
+
+  
 }
