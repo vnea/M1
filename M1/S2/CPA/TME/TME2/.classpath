@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="G:/Victor/Cours_UPMC/M1/M1/S2/CPA/TME/TME2/jars/TME2_supportGUI.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
