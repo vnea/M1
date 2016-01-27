@@ -2,6 +2,7 @@ package algorithms;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 import supportGUI.Circle;
 import supportGUI.Line;
@@ -93,26 +94,26 @@ public class DefaultTeam {
     			produit_vec = vectorProductZ(a, b, a, c);
     		}
     		
-    		//On test si chaque point est du même côté
+    		//On test si chaque point est du mï¿½me cï¿½tï¿½
         	while(sur_enveloppe && i<points.size()){
         		c =  points.get(i);
         		prod_vec_tmp = vectorProductZ(a, b, a, c);
         		if(produit_vec * prod_vec_tmp < 0.0){
         			sur_enveloppe = false;
         		}
-        		else if(prod_vec_tmp == 0){ //Si les points sont alignés
+        		else if(prod_vec_tmp == 0){ //Si les points sont alignï¿½s
         			distance = a.distance(b);
-        			// On prend les plus éloignés
+        			// On prend les plus ï¿½loignï¿½s
         			if(distance < a.distance(c)){
         				b = c;
         			}
         		}
         		i++;
         	}
-        	// On les ajoutent à l'enveloppe s'ils n'en font pas déjà parti
+        	// On les ajoutent ï¿½ l'enveloppe s'ils n'en font pas dï¿½jï¿½ parti
         	// On ne retire pas les doublons finalement 
-        	// car sinon les cotés ne seront pas tracés 
-        	// comme on veux (là ils sont tous reliés entre eux du coup)
+        	// car sinon les cotï¿½s ne seront pas tracï¿½s 
+        	// comme on veux (lï¿½ ils sont tous reliï¿½s entre eux du coup)
         	if(sur_enveloppe){
         		//if(!enveloppe.contains(a))
         			enveloppe.add(a);
@@ -125,6 +126,43 @@ public class DefaultTeam {
     return enveloppe;
   }
   
+  /*
+	public ArrayList<Point> enveloppeConvexe(ArrayList<Point> points) {
+		if (points.size() < 3) {
+			return null;
+		}
+	
+	    // Application du filtre par pixel
+	    points = triParPixel(points);
+	
+	    
+	    ArrayList<Point> enveloppe = new ArrayList<Point>();	    
+	    
+	    for (Point a : points) {
+	    	for (Point b : points) {
+	    		if (a != b) {	    			
+//	    			int i = 0;
+//	    			boolean isEdgeConverHull = true;
+//	    			while (isEdgeConverHull && i < points.size()) {
+//	    				double valueVectorProduct = vectorProduct2D(a, b, points.get(i));
+//	    				if (valueVectorProduct < 0.0) {
+//	    					isEdgeConverHull = false;
+//	    				}
+//	    			}
+	    			
+	    			
+	    			if (isEdgeConvexHull(points, a, b)) {
+	    				enveloppe.add(a);
+	    				enveloppe.add(b);
+	    			}
+	    		}
+	        }
+	    }
+	  
+	    return enveloppe;
+	}
+  */
+  
   private double vectorProductZ(Point p1, Point p2, Point p3, Point p4) {
 		final double ux = p2.getX() - p1.getX();
 		final double uy = p2.getY() - p1.getY();
@@ -132,33 +170,42 @@ public class DefaultTeam {
 		final double vy = p4.getY() - p3.getY();
 
 		return ux * vy - uy * vx;
-	}
+  }
+  
+  private double vectorProduct2D(Point p1, Point p2, Point p3) {
+		final double ux = p2.getX() - p1.getX();
+		final double uy = p2.getY() - p1.getY();
+		final double vx = p3.getX() - p1.getX();
+		final double vy = p3.getY() - p1.getY();
+
+		return ux * vy - uy * vx;
+  }
   
   // Exo 2
   private ArrayList<Point> triParPixel(ArrayList<Point> points) {
 	  ArrayList<Point> ymin = new ArrayList<>(points.size());
 	  ArrayList<Point> ymax = new ArrayList<>(points.size());
 
-	  // On remplit ymin et yman à null
+	  // On remplit ymin et yman ï¿½ null
 	  for (int i = 0; i < points.size(); ++i)  {
 		  ymin.add(null);
 		  ymax.add(null);
 	  }
 	  
-	  // Mise à jour de ymin
+	  // Mise ï¿½ jour de ymin
 	  for (Point p : points) {
 		  int px = (int) p.getX();
 		  Point yminPx = ymin.get(px);
 		  /*
 		   *  Ici je ne sais pas si c'est yminPx.getY() > p.getY() ou yminPx.getY() < p.getY()
-		   *  vu que l'axe des Y est inversé
+		   *  vu que l'axe des Y est inversï¿½
 		   */
 		  if (yminPx == null || yminPx.getY() < p.getY()) {
 			  ymin.set(px, p);
 		  }
 	  }
 	  
-	  // Mise à jour de yman
+	  // Mise ï¿½ jour de yman
 	  for (Point p : points) {
 		  int py = (int) p.getY();
 		  Point ymaxPy = ymax.get(py);
@@ -167,21 +214,26 @@ public class DefaultTeam {
 		  }
 	  }
 	  
-	  // On n'ajoute dans result que les éléments non nuls
+	  // On n'ajoute dans result que les ï¿½lï¿½ments non nuls
 	  ArrayList<Point> result = new ArrayList<>(points.size());
 	  for (int i = 0; i < points.size(); ++i)  {
 		  if (ymin.get(i) != null) {
 			  result.add(ymin.get(i));
 		  }
+	  }
+	  
+	  for (int i = points.size() - 1; i >= 0; --i)  {
 		  if (ymax.get(i) != null) {
 			  result.add(ymax.get(i));
 		  }
-	  }	  
+	  }	
 	  
 	  return result;
   }
   
-  private ArrayList<Point> jarvis(ArrayList<Point> points) {
+  private ArrayList<Point> jarvis(ArrayList<Point> points) {	  
+	  System.out.println("Start - Jarvis");
+
 	  // Etape 1 : on cherche un premier point P de l'enveloppe convexe : abscisse minimum
 	  Point P = points.get(0);
 	  int index = 0;
@@ -196,16 +248,57 @@ public class DefaultTeam {
 	  result.add(P);
 	  
 
-	  // Etape 2 : on cherche un point Q tel que PQ est un côté de l'enveloppe convexe
+	  // Etape 2 : on cherche un point Q tel que PQ est un cï¿½tï¿½ de l'enveloppe convexe
 	  Point Q;
 	  do {
 		  Q = points.get(++index % points.size());
 	  } while (!isEdgeConvexHull(points, P, Q));
-	  result.add(Q);
+	  //result.add(Q);
 
-	  // Etape 4
+	  // Etape 3
+	  Point P0 = P;
+	  int i = 0;
+	  do {  
+		  double minCosAngle = 1.0;
+		 // System.out.println(Math.acos(minAngle));
+		  Point R = points.get(0);
+		  result.add(Q);
 
+		  
+		  for (Point pi : points) {
+			  if (pi != Q) {
+				  double pqx, pqy, prx, pry;
+				  pqx = Q.x - P.x;
+				  pqy = Q.y - P.y;
+				  prx = pi.x - P.x;
+				  pry = pi.y - P.y;
+				  double currentCosAngle = Math.acos((pqx * prx + pqy * pry) /
+						            (Math.sqrt(pqx * pqx + pqy * pqy) *
+						             Math.sqrt(prx * prx + pry * pry)));
+				  
+				  double value = vectorProduct2D(P, Q, pi);
+				  if (value < 0) {
+					  currentCosAngle *= -1;
+				  }
+				  //System.out.println(currentAngle);
 
+				  if (currentCosAngle < minCosAngle) {
+					  //System.out.println(currentCosAngle);
+					  R = pi;
+					  minCosAngle = currentCosAngle;
+				  }
+			  }
+		  }
+		  //System.out.println("SEPARATOR\n");
+
+		  P = Q;
+		  Q = R;
+
+		  //Q = R;
+
+	  } while (P != P0 && ++i < 300);
+	  
+	  System.out.println("End - Jarvis - " + result.size());
 	  
 	  return result;
   }
@@ -219,6 +312,5 @@ public class DefaultTeam {
 	  
 	  return true;
   }
-
   
 }
