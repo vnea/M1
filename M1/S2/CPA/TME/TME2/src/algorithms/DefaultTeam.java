@@ -249,7 +249,6 @@ public class DefaultTeam {
 	  do {
 		  Q = points.get(++index % points.size());
 	  } while (!isEdgeConvexHull(points, P, Q));
-	  result.add(Q);
 
 	  // Etape 3, 4 et 5
 	  do {
