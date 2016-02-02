@@ -63,7 +63,10 @@ public class DefaultTeam {
 
     // Application du filtre par pixel
     //System.out.println(points.size());
-    //points = triParPixel(points);
+    
+//    points = triParPixel(points);
+//    if (true) return points;
+    
     //System.out.println(points.size());
 
     
@@ -195,34 +198,27 @@ public class DefaultTeam {
 	  // Mise � jour de ymin
 	  for (Point p : points) {
 		  int px = (int) p.getX();
-		  Point yminPx = ymin.get(px);
-		  /*
-		   *  Ici je ne sais pas si c'est yminPx.getY() > p.getY() ou yminPx.getY() < p.getY()
-		   *  vu que l'axe des Y est invers�
-		   */
-		  if (yminPx == null || yminPx.getY() < p.getY()) {
+		  
+		  Point yminPx = ymin.get((int) p.getX());
+		  if (yminPx == null || yminPx.y < p.y) {
 			  ymin.set(px, p);
 		  }
-	  }
-	  
-	  // Mise � jour de yman
-	  for (Point p : points) {
-		  int py = (int) p.getY();
-		  Point ymaxPy = ymax.get(py);
-		  if (ymaxPy == null || ymaxPy.getX() < p.getX()) {
-			  ymax.set(py, p);
+		  
+		  Point ymaxPx = ymax.get(px);
+		  if (ymaxPx == null || ymaxPx.y > p.y) {
+			  ymax.set(px, p);
 		  }
 	  }
 	  
 	  // On n'ajoute dans result que les �l�ments non nuls
 	  ArrayList<Point> result = new ArrayList<>(points.size());
-	  for (int i = 0; i < points.size(); ++i)  {
+	  for (int i = 0; i < points.size(); i++)  {
 		  if (ymin.get(i) != null) {
 			  result.add(ymin.get(i));
 		  }
 	  }
 	  
-	  for (int i = points.size() - 1; i >= 0; --i)  {
+	  for (int i = points.size() - 1; i >= 0; i--)  {
 		  if (ymax.get(i) != null) {
 			  result.add(ymax.get(i));
 		  }
@@ -253,52 +249,16 @@ public class DefaultTeam {
 	  do {
 		  Q = points.get(++index % points.size());
 	  } while (!isEdgeConvexHull(points, P, Q));
-	  //result.add(Q);
+	  result.add(Q);
 
-	  // Etape 3
-	  Point P0 = P;
-	  int i = 0;
-	  do {  
-		  double minCosAngle = 1.0;
-		 // System.out.println(Math.acos(minAngle));
-		  Point R = points.get(0);
+	  // Etape 3, 4 et 5
+	  do {
 		  result.add(Q);
-
 		  
-		  for (Point pi : points) {
-			  if (pi != Q) {
-				  double pqx, pqy, prx, pry;
-				  pqx = Q.x - P.x;
-				  pqy = Q.y - P.y;
-				  prx = pi.x - P.x;
-				  pry = pi.y - P.y;
-				  double currentCosAngle = Math.acos((pqx * prx + pqy * pry) /
-						            (Math.sqrt(pqx * pqx + pqy * pqy) *
-						             Math.sqrt(prx * prx + pry * pry)));
-				  
-				  double value = vectorProduct2D(P, Q, pi);
-				  if (value < 0) {
-					  currentCosAngle *= -1;
-				  }
-				  //System.out.println(currentAngle);
-
-				  if (currentCosAngle < minCosAngle) {
-					  //System.out.println(currentCosAngle);
-					  R = pi;
-					  minCosAngle = currentCosAngle;
-				  }
-			  }
-		  }
-		  //System.out.println("SEPARATOR\n");
-
+		  Point R = findMinimalAngle(points, P, Q);
 		  P = Q;
 		  Q = R;
-
-		  //Q = R;
-
-	  } while (P != P0 && ++i < 300);
-	  
-	  System.out.println("End - Jarvis - " + result.size());
+	  } while (P != result.get(0));
 	  
 	  return result;
   }
@@ -313,4 +273,30 @@ public class DefaultTeam {
 	  return true;
   }
   
+  private Point findMinimalAngle(ArrayList<Point> points, Point P, Point Q) {
+	  Point R = null;
+	  double minCosAngle = -1.0;
+
+	  for (Point pi : points) {
+		  if (pi != Q && pi != P) {
+			  double pqx, pqy, qrx, qry;
+			  pqx = Q.x - P.x;
+			  pqy = Q.y - P.y;
+			  qrx = pi.x - Q.x;
+			  qry = pi.y - Q.y;
+			  double currentCosAngle = (pqx * qrx + pqy * qry) /
+					            	   (Math.sqrt(pqx * pqx + pqy * pqy) *
+					                    Math.sqrt(qrx * qrx + qry * qry));
+			  
+			  if (currentCosAngle > minCosAngle) {
+				  R = pi;
+				  minCosAngle = currentCosAngle;
+			  }
+		  }
+	  }
+	  
+	  return R;
+  }
+  
 }
+
