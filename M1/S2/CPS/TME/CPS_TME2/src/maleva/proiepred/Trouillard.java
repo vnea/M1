@@ -84,8 +84,14 @@ public class Trouillard extends Agent {
 	public boolean step() throws LifeCycleException {
 		super.step();
 		
-		// A COMPLETER
-		
+		if(capteur.step() && fuir.step()) {
+			System.out.println("Trouillard '"+getID()+"' sees agents, flee");
+			return effecteur.step();
+		} else if(rndmvt.step()) {
+			System.out.println("Agent '"+getID()+"' sees nothing or cannot follow");
+			return effecteur.step();
+		}		
+		System.out.println("Agent '"+getID()+"' cannot do nothing");
 		return false;
 	}
 	

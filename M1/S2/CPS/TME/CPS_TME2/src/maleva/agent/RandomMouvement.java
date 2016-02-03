@@ -23,7 +23,10 @@ public class RandomMouvement extends ComportementAgent {
 	public boolean step() throws LifeCycleException {
 		
 		// A COMPLETER
-		
-		return false;
+		// Generate a number between -outer.getAngle() and +outer.getAngle()
+		angle_step = rand.nextInt(2 * outer.getAngle() + 1) - outer.getAngle();
+		action = new Action(Action.MOVE, outer.getAngle() + angle_step);
+
+		return true;
 	}
 }
