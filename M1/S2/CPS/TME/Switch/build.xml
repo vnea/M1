@@ -1,0 +1,51 @@
+<project name="switch" default="compile" basedir=".">
+    <description>
+        The build file for the Tamago example Remocar
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="bin" location="bin"/>
+
+  <!-- METTRE ICI LE NOM DU BINOME -->
+  <property name="nom1" value="LASSAUZAY"/>
+  <property name="nom2" value="NEA"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the bin directory structure used by compile -->
+    <mkdir dir="${bin}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${bin} -->
+    <javac debug="true" srcdir="${src}" excludes="" destdir="${bin}" includeantruntime="false" />
+  </target>
+
+  <target name="run" depends="compile"
+          description="run example">
+    <!--<echo>================ Run Maleva simulator ================</echo>-->
+    <java classname="switchex.main.SwitchMain" classpath="${bin}" />
+    <!--   <arg value="100"/>
+    </java>-->
+  </target>
+
+  <target name="dist" depends="init,clean"
+        description="Generer la distribution" >
+    <!-- tout mettre dans l'archive -->
+    <jar basedir="." jarfile="../Switch-contract-example-${DSTAMP}.jar" />
+  </target>
+
+  <target name="clean"
+        description="clean up" >	
+	<echo>================ Removing temporary files... ================</echo>
+        <delete verbose="true"> <!-- Remove all *~ files -->
+	   <fileset dir="${basedir}" defaultexcludes="no">
+             <include name="**/*~"/>
+           </fileset>
+        </delete>
+        <echo>================ Removing bin directory ================</echo>    
+	<delete dir="${bin}"/>
+  </target>
+</project>
