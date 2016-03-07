@@ -1,0 +1,19 @@
+module GERANT :
+
+    input FIN;
+    constant max : integer;
+    input C : integer;
+    output P;
+    output MAX, VIDE;
+    output C_S : integer;
+    output P_S;
+    output ST : integer, FS : integer;
+    output S : combine integer with +;
+    
+    
+    [ || ]
+    
+ 
+        
+end module
+    

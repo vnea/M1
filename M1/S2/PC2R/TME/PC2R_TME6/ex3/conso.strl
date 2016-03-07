@@ -1,0 +1,23 @@
+module CONSO :
+
+    input FIN, Ci, C_S : integer;
+    output C : integer, FC : integer;
+    constant num : integer;
+    
+    var nbconso1 := 0 : integer in
+        abort
+            loop
+                await Ci;
+                emit C(num);
+                await C_S;
+                if (?C_S = num) then
+                    nbconso1 := nbconso1 + 1;
+                end if;
+            end loop
+        when FIN;
+        
+        emit FC(nbconso1);
+    end var;
+    
+end module
+    

@@ -1,0 +1,28 @@
+module ZUDNB :
+
+    input ZERO, UN, DEUX;
+    output NB : integer;
+    
+    var cpt := 0 : integer in
+        loop
+            cpt := 0;
+            loop
+                await [UN or DEUX];
+
+                present UN then
+                    cpt := cpt + 1;
+                end present;
+
+                present DEUX then
+                    cpt := cpt + 2;
+                end present;
+
+                if (cpt mod 3) = 0 then
+                    emit NB(cpt);
+                end if;
+            end loop
+        each ZERO
+    end var;
+        
+end module
+    

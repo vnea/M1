@@ -1,0 +1,20 @@
+module PROD :
+
+    input FIN, P_S;
+    output P, FP : integer;
+    
+    var nbprod := 0 : integer in
+        abort
+            loop
+                await 3 tick;
+                emit P;
+                nbprod := nbprod + 1;
+                await P_S;
+            end loop
+        when FIN;
+        
+        emit FP(nbprod);
+    end var;
+    
+end module
+    
