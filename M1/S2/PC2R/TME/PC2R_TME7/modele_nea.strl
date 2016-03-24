@@ -1,0 +1,93 @@
+module medele :
+
+input  ENTER, ESCAPE, LEFT, RIGHT;
+input  A_isMoving, B_isMoving, C_isMoving;
+input  Distance : integer, Depassement_Lumiere, Sound;
+input  Touch;
+
+output A_Vitesse : integer, B_Vitesse : integer, C_Vitesse : integer;
+output A_Avance, B_Avance, C_Avance;
+output tmpsig;
+output LCD : string, LCDint : integer, LCDfloat : float;
+output A_Recul, B_Recul, C_Recul;
+output A_Stop, B_Stop, C_Stop;
+output Bip;
+sensor Light : float;
+
+% Question2
+%loop
+%    await immediate Touch;
+%    emit Bip;
+%    pause;
+%end loop;
+
+% Questions 3-4
+%abort
+%    loop
+%        abort
+%            loop
+%                emit A_Avance;
+%                emit C_Avance;
+%                pause;
+%            end loop;
+%        when 30 tick;
+%
+%        emit A_Stop;
+%        emit C_Stop;
+%        pause;
+%        
+%        abort
+%            loop
+%                emit A_Recul;
+%                emit C_Recul;
+%                pause;
+%            end loop;
+%        when 30 tick;
+%
+%        emit A_Stop;
+%        emit C_Stop;
+%        pause;
+%    end loop;
+%when ESCAPE;
+
+% Question 5
+signal Fin in
+    abort
+        emit A_Avance;
+        emit C_Avance;
+        loop
+            abort
+                loop
+                    if (?Light < 470.0f) then
+                        emit Fin;
+                    end if;
+                    pause;
+                end loop;
+            when Fin;
+            
+            pause;
+            emit A_Stop;
+            emit C_Avance;
+            pause;
+            
+            await 20 tick;
+            emit A_Avance;
+            
+        end loop;
+    when ESCAPE;
+end signal;
+
+
+
+
+
+
+
+
+
+
+
+
+
+end module
+

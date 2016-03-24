@@ -1,2 +1,6 @@
+Fair Thread :
 gcc prodconsft.c -L ../../../lib_fthread/ -lfthread -lpthread
 
+Esterel :
+esterel modele_nea.strl -B modele_nea -simul
+gcc -m32 -o modele_nea modele_nea.c -I $ESTEREL/include/ -L $ESTEREL/lib/ -lcsimul
